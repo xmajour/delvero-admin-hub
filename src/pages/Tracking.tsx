@@ -234,100 +234,102 @@ const Tracking = () => {
           </div>
         </div>
 
-        <TabsContent value="riders" className="m-0">
-          <Card>
-            <CardContent className="p-6">
-              <div className="grid gap-4">
-                {filteredRiders.length > 0 ? (
-                  filteredRiders.map((rider) => (
-                    <div key={rider.id} className="flex items-center justify-between border-b last:border-0 pb-4 last:pb-0">
-                      <div className="flex items-center gap-4">
-                        <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium">
-                          {rider.name.charAt(0)}
+        <Tabs value={selectedTab}>
+          <TabsContent value="riders" className="m-0">
+            <Card>
+              <CardContent className="p-6">
+                <div className="grid gap-4">
+                  {filteredRiders.length > 0 ? (
+                    filteredRiders.map((rider) => (
+                      <div key={rider.id} className="flex items-center justify-between border-b last:border-0 pb-4 last:pb-0">
+                        <div className="flex items-center gap-4">
+                          <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium">
+                            {rider.name.charAt(0)}
+                          </div>
+                          <div>
+                            <div className="font-medium flex items-center gap-2">
+                              {rider.name}
+                              <div className={`h-2 w-2 rounded-full ${getStatusColor(rider.status)}`} />
+                              <span className="text-xs font-normal text-muted-foreground">{rider.status}</span>
+                            </div>
+                            <div className="text-sm text-muted-foreground flex items-center gap-1">
+                              <MapPin className="h-3 w-3" />
+                              {rider.location}
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          <div className="font-medium flex items-center gap-2">
-                            {rider.name}
-                            <div className={`h-2 w-2 rounded-full ${getStatusColor(rider.status)}`} />
-                            <span className="text-xs font-normal text-muted-foreground">{rider.status}</span>
+                        <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-1">
+                            <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
+                            <span className="text-sm">{rider.rating}</span>
                           </div>
-                          <div className="text-sm text-muted-foreground flex items-center gap-1">
-                            <MapPin className="h-3 w-3" />
-                            {rider.location}
-                          </div>
+                          <Badge variant="outline" className="gap-1">
+                            <FileText className="h-3 w-3" />
+                            {rider.orders} orders
+                          </Badge>
+                          <Badge variant="secondary" className="gap-1">
+                            <Phone className="h-3 w-3" />
+                            Call
+                          </Badge>
                         </div>
                       </div>
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
-                          <span className="text-sm">{rider.rating}</span>
-                        </div>
-                        <Badge variant="outline" className="gap-1">
-                          <FileText className="h-3 w-3" />
-                          {rider.orders} orders
-                        </Badge>
-                        <Badge variant="secondary" className="gap-1">
-                          <Phone className="h-3 w-3" />
-                          Call
-                        </Badge>
-                      </div>
+                    ))
+                  ) : (
+                    <div className="py-6 text-center text-muted-foreground">
+                      No riders found matching your search
                     </div>
-                  ))
-                ) : (
-                  <div className="py-6 text-center text-muted-foreground">
-                    No riders found matching your search
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-        <TabsContent value="customers" className="m-0">
-          <Card>
-            <CardContent className="p-6">
-              <div className="grid gap-4">
-                {filteredCustomers.length > 0 ? (
-                  filteredCustomers.map((customer) => (
-                    <div key={customer.id} className="flex items-center justify-between border-b last:border-0 pb-4 last:pb-0">
-                      <div className="flex items-center gap-4">
-                        <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center text-blue-500 font-medium">
-                          {customer.name.charAt(0)}
+          <TabsContent value="customers" className="m-0">
+            <Card>
+              <CardContent className="p-6">
+                <div className="grid gap-4">
+                  {filteredCustomers.length > 0 ? (
+                    filteredCustomers.map((customer) => (
+                      <div key={customer.id} className="flex items-center justify-between border-b last:border-0 pb-4 last:pb-0">
+                        <div className="flex items-center gap-4">
+                          <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center text-blue-500 font-medium">
+                            {customer.name.charAt(0)}
+                          </div>
+                          <div>
+                            <div className="font-medium">
+                              {customer.name}
+                            </div>
+                            <div className="text-sm text-muted-foreground flex items-center gap-1">
+                              <MapPin className="h-3 w-3" />
+                              {customer.location}
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          <div className="font-medium">
-                            {customer.name}
+                        <div className="flex items-center gap-4">
+                          <Badge variant="outline" className="gap-1">
+                            <FileText className="h-3 w-3" />
+                            {customer.orders} orders
+                          </Badge>
+                          <div className="text-xs text-muted-foreground">
+                            Last order: {customer.lastOrder}
                           </div>
-                          <div className="text-sm text-muted-foreground flex items-center gap-1">
-                            <MapPin className="h-3 w-3" />
-                            {customer.location}
-                          </div>
+                          <Badge variant="secondary" className="gap-1">
+                            <Phone className="h-3 w-3" />
+                            Call
+                          </Badge>
                         </div>
                       </div>
-                      <div className="flex items-center gap-4">
-                        <Badge variant="outline" className="gap-1">
-                          <FileText className="h-3 w-3" />
-                          {customer.orders} orders
-                        </Badge>
-                        <div className="text-xs text-muted-foreground">
-                          Last order: {customer.lastOrder}
-                        </div>
-                        <Badge variant="secondary" className="gap-1">
-                          <Phone className="h-3 w-3" />
-                          Call
-                        </Badge>
-                      </div>
+                    ))
+                  ) : (
+                    <div className="py-6 text-center text-muted-foreground">
+                      No customers found matching your search
                     </div>
-                  ))
-                ) : (
-                  <div className="py-6 text-center text-muted-foreground">
-                    No customers found matching your search
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
