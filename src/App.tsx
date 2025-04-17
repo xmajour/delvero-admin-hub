@@ -11,7 +11,9 @@ import { MainLayout } from "@/components/layouts/main-layout";
 
 // Pages
 import Dashboard from "./pages/Dashboard";
-import Tracking from "./pages/Tracking";
+import Customers from "./pages/Customers";
+import Riders from "./pages/Riders";
+import Merchants from "./pages/Merchants";
 import Orders from "./pages/Orders";
 import Pricing from "./pages/Pricing";
 import Payments from "./pages/Payments";
@@ -33,7 +35,9 @@ const App = () => (
           <Routes>
             <Route element={<MainLayout />}>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/tracking" element={<Tracking />} />
+              <Route path="/customers" element={<Customers />} />
+              <Route path="/riders" element={<Riders />} />
+              <Route path="/merchants" element={<Merchants />} />
               <Route path="/orders" element={<Orders />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/payments" element={<Payments />} />

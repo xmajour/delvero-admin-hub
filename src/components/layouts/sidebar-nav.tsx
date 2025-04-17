@@ -12,6 +12,8 @@ import {
   HelpCircle,
   Truck,
   HomeIcon,
+  Store,
+  User,
 } from "lucide-react";
 
 interface SidebarNavProps {
@@ -27,10 +29,22 @@ const navItems = [
     color: "text-delvero-500",
   },
   {
-    title: "Riders & Customers",
-    href: "/tracking",
-    icon: MapPin,
+    title: "Customers",
+    href: "/customers",
+    icon: User,
     color: "text-blue-500",
+  },
+  {
+    title: "Riders",
+    href: "/riders",
+    icon: Truck,
+    color: "text-green-500",
+  },
+  {
+    title: "Merchants",
+    href: "/merchants",
+    icon: Store,
+    color: "text-purple-500",
   },
   {
     title: "Orders",
