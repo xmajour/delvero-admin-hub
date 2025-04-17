@@ -337,7 +337,7 @@ const Customers = () => {
                           <div>
                             <div className="font-medium flex items-center gap-2">
                               {customer.name}
-                              <Badge variant={customer.status === "active" ? "success" : "secondary"} className="text-xs">
+                              <Badge variant={customer.status === "active" ? "default" : "secondary"} className="text-xs">
                                 {customer.status === "active" ? "Active" : "Inactive"}
                               </Badge>
                             </div>

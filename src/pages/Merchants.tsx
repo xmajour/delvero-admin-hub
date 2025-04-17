@@ -354,7 +354,7 @@ const Merchants = () => {
                           <div>
                             <div className="font-medium flex items-center gap-2">
                               {merchant.name}
-                              <Badge variant={merchant.status === "active" ? "success" : "secondary"} className="text-xs">
+                              <Badge variant={merchant.status === "active" ? "default" : "secondary"} className="text-xs">
                                 {merchant.status === "active" ? "Active" : "Inactive"}
                               </Badge>
                             </div>
