@@ -5,7 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, Star, Phone, FileText, MapPin, Truck, Filter, SlidersHorizontal, DownloadCloud, Plus } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, Label } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label"
 
 const Riders = () => {
   const [searchQuery, setSearchQuery] = useState("");
