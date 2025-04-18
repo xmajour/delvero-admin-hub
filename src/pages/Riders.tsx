@@ -1,17 +1,19 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Star, Phone, FileText, MapPin, Truck, Filter, SlidersHorizontal, DownloadCloud } from "lucide-react";
+import { Search, Star, Phone, FileText, MapPin, Truck, Filter, SlidersHorizontal, DownloadCloud, Plus } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, Label } from "@/components/ui/dialog";
 
 const Riders = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTab, setSelectedTab] = useState("online");
+  const [showAddRider, setShowAddRider] = useState(false);
+  const [showEditProfile, setShowEditProfile] = useState(false);
+  const [selectedRider, setSelectedRider] = useState<any>(null);
 
-  // Mock data
   const riders = [
     {
       id: 1,
@@ -115,11 +117,17 @@ const Riders = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Riders</h1>
-        <p className="text-muted-foreground">
-          Manage your delivery fleet and track performance
-        </p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Riders</h1>
+          <p className="text-muted-foreground">
+            Manage your delivery fleet and track performance
+          </p>
+        </div>
+        <Button onClick={() => setShowAddRider(true)}>
+          <Plus className="h-4 w-4 mr-2" />
+          Add Rider
+        </Button>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
@@ -274,6 +282,16 @@ const Riders = () => {
                           <div className="hidden md:block text-xs text-muted-foreground">
                             Earnings: {rider.earnings}
                           </div>
+                          <Button 
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedRider(rider);
+                              setShowEditProfile(true);
+                            }}
+                          >
+                            Edit Profile
+                          </Button>
                           <Badge variant="secondary" className="gap-1">
                             <Phone className="h-3 w-3" />
                             Call
@@ -406,6 +424,50 @@ const Riders = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      <Dialog open={showAddRider} onOpenChange={setShowAddRider}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Add New Rider</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="name" className="text-right">
+                Name
+              </Label>
+              <Input id="name" className="col-span-3" />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="submit">Save Rider</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showEditProfile} onOpenChange={setShowEditProfile}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Edit Rider Profile</DialogTitle>
+          </DialogHeader>
+          {selectedRider && (
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-name" className="text-right">
+                  Name
+                </Label>
+                <Input 
+                  id="edit-name" 
+                  defaultValue={selectedRider.name}
+                  className="col-span-3" 
+                />
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button type="submit">Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

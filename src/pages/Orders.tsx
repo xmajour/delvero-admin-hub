@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -13,9 +12,16 @@ import {
   AlertCircle,
   UserCircle,
   Truck,
+  Eye,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -127,6 +133,8 @@ const ordersMockData = [
 const Orders = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [showOrderDetails, setShowOrderDetails] = useState(false);
   
   // Filter orders based on search query and status
   const filteredOrders = ordersMockData.filter(order => {
@@ -308,19 +316,30 @@ const Orders = () => {
                           </td>
                           <td className="px-6 py-4 font-medium">{order.amount}</td>
                           <td className="px-6 py-4">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-8 w-8">
-                                  <MoreHorizontal className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem>View details</DropdownMenuItem>
-                                <DropdownMenuItem>Track order</DropdownMenuItem>
-                                <DropdownMenuItem>Contact customer</DropdownMenuItem>
-                                <DropdownMenuItem>Contact rider</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                            <div className="flex items-center gap-2">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => {
+                                  setSelectedOrder(order);
+                                  setShowOrderDetails(true);
+                                }}
+                              >
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                                    <MoreHorizontal className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem>Track order</DropdownMenuItem>
+                                  <DropdownMenuItem>Contact customer</DropdownMenuItem>
+                                  <DropdownMenuItem>Contact rider</DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
                           </td>
                         </tr>
                       ))
@@ -338,6 +357,52 @@ const Orders = () => {
           </Card>
         </Tabs>
       </div>
+
+      <Dialog open={showOrderDetails} onOpenChange={setShowOrderDetails}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Order Details</DialogTitle>
+          </DialogHeader>
+          {selectedOrder && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Order ID</label>
+                  <p className="font-medium">{selectedOrder.id}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Status</label>
+                  <div>{getStatusBadge(selectedOrder.status)}</div>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Customer</label>
+                  <p>{selectedOrder.customer}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Rider</label>
+                  <p>{selectedOrder.rider}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Pickup Location</label>
+                  <p>{selectedOrder.pickup}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Dropoff Location</label>
+                  <p>{selectedOrder.dropoff}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Time</label>
+                  <p>{selectedOrder.date}, {selectedOrder.time}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Amount</label>
+                  <p className="font-medium">{selectedOrder.amount}</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

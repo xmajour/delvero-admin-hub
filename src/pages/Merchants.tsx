@@ -1,17 +1,19 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Star, Phone, FileText, MapPin, Store, Filter, SlidersHorizontal, DownloadCloud } from "lucide-react";
+import { Search, Star, Phone, FileText, MapPin, Store, Filter, SlidersHorizontal, DownloadCloud, Plus } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, Label } from "@/components/ui/dialog";
 
 const Merchants = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTab, setSelectedTab] = useState("active");
+  const [showAddMerchant, setShowAddMerchant] = useState(false);
+  const [showEditProfile, setShowEditProfile] = useState(false);
+  const [selectedMerchant, setSelectedMerchant] = useState<any>(null);
 
-  // Mock data
   const merchants = [
     {
       id: 1,
@@ -109,11 +111,17 @@ const Merchants = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Merchants</h1>
-        <p className="text-muted-foreground">
-          Manage partner merchants and track their performance
-        </p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Merchants</h1>
+          <p className="text-muted-foreground">
+            Manage partner merchants and track their performance
+          </p>
+        </div>
+        <Button onClick={() => setShowAddMerchant(true)}>
+          <Plus className="h-4 w-4 mr-2" />
+          Add Merchant
+        </Button>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
@@ -267,6 +275,16 @@ const Merchants = () => {
                           <div className="hidden md:block text-xs text-muted-foreground">
                             Last order: {merchant.lastOrder}
                           </div>
+                          <Button 
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedMerchant(merchant);
+                              setShowEditProfile(true);
+                            }}
+                          >
+                            Edit Profile
+                          </Button>
                           <Badge variant="secondary" className="gap-1">
                             <Phone className="h-3 w-3" />
                             Call
@@ -400,6 +418,50 @@ const Merchants = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      <Dialog open={showAddMerchant} onOpenChange={setShowAddMerchant}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Add New Merchant</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="name" className="text-right">
+                Name
+              </Label>
+              <Input id="name" className="col-span-3" />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="submit">Save Merchant</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showEditProfile} onOpenChange={setShowEditProfile}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Edit Merchant Profile</DialogTitle>
+          </DialogHeader>
+          {selectedMerchant && (
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-name" className="text-right">
+                  Name
+                </Label>
+                <Input 
+                  id="edit-name" 
+                  defaultValue={selectedMerchant.name}
+                  className="col-span-3" 
+                />
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button type="submit">Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
