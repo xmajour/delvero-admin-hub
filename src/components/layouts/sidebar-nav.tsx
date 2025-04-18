@@ -99,7 +99,11 @@ export function SidebarNav({ collapsed, setCollapsed }: SidebarNavProps) {
     >
       <div className="p-4 flex h-16 items-center border-b">
         <div className="flex items-center gap-2">
-          <Truck className="h-7 w-7 text-delvero-500" />
+          <img 
+            src="/lovable-uploads/86dd8452-5d5c-4ff8-a614-461d6d3fdce4.png" 
+            alt="Delvero Logo" 
+            className="h-7 w-7 text-delvero-500" 
+          />
           {!collapsed && (
             <span className="font-bold text-xl">Delvero Admin</span>
           )}
