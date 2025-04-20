@@ -296,17 +296,23 @@ const Orders = () => {
                       filteredOrders.map((order) => (
                         <tr key={order.id} className="border-b last:border-0 hover:bg-muted/50">
                           <td className="px-6 py-4 font-medium">{order.id}</td>
-                          <td className="px-6 py-4 flex items-center gap-2">
-                            <UserCircle className="h-4 w-4 text-muted-foreground" />
-                            {order.customer}
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-2 flex-nowrap min-w-0">
+                              <UserCircle className="h-4 w-4 text-muted-foreground shrink-0" />
+                              <span className="truncate max-w-[110px]">{order.customer}</span>
+                            </div>
                           </td>
-                          <td className="px-6 py-4 flex items-center gap-2">
-                            <Truck className="h-4 w-4 text-muted-foreground" />
-                            {order.rider}
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-2 flex-nowrap min-w-0">
+                              <Truck className="h-4 w-4 text-muted-foreground shrink-0" />
+                              <span className="truncate max-w-[110px]">{order.rider}</span>
+                            </div>
                           </td>
-                          <td className="px-6 py-4 flex items-center gap-2">
-                            <MapPin className="h-4 w-4 text-muted-foreground" /> 
-                            <span className="truncate max-w-[150px]">{order.pickup}</span>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-2 flex-nowrap min-w-0">
+                              <MapPin className="h-4 w-4 text-muted-foreground shrink-0" /> 
+                              <span className="truncate max-w-[150px]">{order.pickup}</span>
+                            </div>
                           </td>
                           <td className="px-6 py-4">
                             {getStatusBadge(order.status)}
