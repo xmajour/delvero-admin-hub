@@ -1,12 +1,27 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Star, Phone, FileText, MapPin, Store, Filter, SlidersHorizontal, DownloadCloud, Plus } from "lucide-react";
+import {
+  Search,
+  Star,
+  Phone,
+  FileText,
+  MapPin,
+  Store,
+  Filter,
+  SlidersHorizontal,
+  DownloadCloud,
+  Plus,
+  ChartPie,
+} from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+// Recharts imports
+import { PieChart, Pie, Cell, Legend, ResponsiveContainer } from "recharts";
 
 const Merchants = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -102,6 +117,15 @@ const Merchants = () => {
     },
   ];
 
+  // Pie chart data
+  const activeCount = merchants.filter((m) => m.status === "active").length;
+  const inactiveCount = merchants.filter((m) => m.status === "inactive").length;
+  const pieData = [
+    { name: "Active", value: activeCount },
+    { name: "Inactive", value: inactiveCount },
+  ];
+  const COLORS = ["#9b87f5", "#E5DEFF"]; // Primary purple & soft purple
+
   const filteredMerchants = merchants.filter(merchant => 
     (selectedTab === "all" || merchant.status === selectedTab) &&
     (merchant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -128,16 +152,41 @@ const Merchants = () => {
       <div className="grid gap-6 md:grid-cols-3">
         <Card className="md:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-base font-medium">
+            <CardTitle className="text-base font-medium flex items-center gap-2">
+              <ChartPie className="h-5 w-5 text-primary" />
               Merchant Revenue
             </CardTitle>
             <div className="text-xs text-muted-foreground">Last 30 days</div>
           </CardHeader>
           <CardContent>
             <div className="aspect-[4/2] bg-muted/30 rounded-md flex items-center justify-center border">
-              <p className="text-muted-foreground">
-                Merchant revenue chart will be displayed here
-              </p>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={38}
+                    outerRadius={68}
+                    label={({ name, percent }) =>
+                      `${name}: ${(percent * 100).toFixed(0)}%`
+                    }
+                  >
+                    {pieData.map((entry, index) => (
+                      <Cell key={entry.name} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Legend
+                    verticalAlign="bottom"
+                    iconType="circle"
+                    formatter={(value, entry, index) => (
+                      <span className="text-xs font-medium">{value}</span>
+                    )}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
@@ -172,7 +221,7 @@ const Merchants = () => {
                   </div>
                 </div>
                 <div className="text-xl font-bold">
-                  {merchants.filter(m => m.status === "active").length}
+                  {activeCount}
                 </div>
               </div>
 
@@ -468,3 +517,4 @@ const Merchants = () => {
 };
 
 export default Merchants;
+
