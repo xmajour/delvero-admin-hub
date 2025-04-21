@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Package,
@@ -7,8 +6,18 @@ import {
   Star,
   Truck,
   Compass,
+  MapPin,
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  TableCaption,
+} from "@/components/ui/table";
 
 const Dashboard = () => {
   // Mock data for dashboard
@@ -53,28 +62,53 @@ const Dashboard = () => {
   return (
     <div className="space-y-6">
       <div>
+        {/* Dashboard title and description */}
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
         <p className="text-muted-foreground">
           Overview of your delivery operations
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat, i) => (
-          <Card key={i}>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">
-                {stat.title}
-              </CardTitle>
-              <div className={`${stat.bgColor} p-2 rounded-full`}>
-                <stat.icon className={`h-4 w-4 ${stat.color}`} />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-            </CardContent>
-          </Card>
-        ))}
+      {/* Stats Table Section */}
+      {/* 
+        To add/edit/remove stats, modify the 'stats' array above.
+        You can also add new TableRows below following the same pattern.
+        This section uses shadcn/ui table for clean, accessible styling.
+      */}
+      <div className="overflow-x-auto">
+        <Table>
+          <TableCaption>Current KPIs of your delivery system.</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Metric</TableHead>
+              <TableHead className="text-center">Value</TableHead>
+              <TableHead className="text-center">Icon</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {stats.map((stat, i) => (
+              <TableRow key={i}>
+                {/* Stat Title (e.g., "Current Orders") */}
+                <TableCell className="font-medium">{stat.title}</TableCell>
+                {/* Stat Value (e.g., "58") */}
+                <TableCell className="text-center">{stat.value}</TableCell>
+                {/* Stat Icon */}
+                <TableCell className="flex justify-center">
+                  {/* 
+                    You can change the icon or its color in the 'stats' array.
+                    To add tooltip or actions, wrap or extend this cell. 
+                  */}
+                  <span className={`${stat.bgColor} p-2 rounded-full`}>
+                    <stat.icon className={`h-5 w-5 ${stat.color}`} />
+                  </span>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        {/* 
+          To add filters or buttons above the table (e.g., "Add Stat"), insert here.
+        */}
       </div>
 
       <div className="grid gap-6 md:grid-cols-7">
