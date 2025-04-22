@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   Card, 
@@ -42,12 +41,11 @@ import {
   ChartTooltip, 
   ChartTooltipContent 
 } from "@/components/ui/chart";
-import { BarChart3, Users, TrendingUp, TrendingDown, Activity, Database } from "lucide-react";
+import { BarChart3, Users, TrendingUp, TrendingDown, Activity, Database, FileText } from "lucide-react";
 
 const Analytics = () => {
   const [activeTab, setActiveTab] = useState("overview");
   
-  // Sample data for the charts
   const overviewData = [
     { name: "Jan", customers: 400, riders: 240, merchants: 180 },
     { name: "Feb", customers: 450, riders: 260, merchants: 190 },
@@ -108,16 +106,47 @@ const Analytics = () => {
     { id: 5, name: "Eva Garcia", orders: 22, spent: "$440" },
   ];
 
+  const orderData = [
+    { name: "Completed", value: 580, color: "#10b981" },
+    { name: "In Progress", value: 120, color: "#f59e0b" },
+    { name: "Cancelled", value: 75, color: "#ef4444" },
+  ];
+  
+  const orderTrend = [
+    { name: "Jan", value: 120 },
+    { name: "Feb", value: 140 },
+    { name: "Mar", value: 180 },
+    { name: "Apr", value: 200 },
+    { name: "May", value: 240 },
+    { name: "Jun", value: 280 },
+  ];
+  
+  const ordersByCategory = [
+    { name: "Food", value: 450 },
+    { name: "Groceries", value: 300 },
+    { name: "Electronics", value: 180 },
+    { name: "Clothing", value: 150 },
+    { name: "Other", value: 100 },
+  ];
+  
+  const topOrders = [
+    { id: 1, orderId: "#ORD-9385", customer: "Alice Wilson", merchant: "Merchant A", amount: "$86.50", status: "Completed" },
+    { id: 2, orderId: "#ORD-9372", customer: "Bob Martinez", merchant: "Merchant C", amount: "$120.00", status: "Completed" },
+    { id: 3, orderId: "#ORD-9368", customer: "Carol Taylor", merchant: "Merchant B", amount: "$95.75", status: "Completed" },
+    { id: 4, orderId: "#ORD-9366", customer: "David Anderson", merchant: "Merchant E", amount: "$45.99", status: "Completed" },
+    { id: 5, orderId: "#ORD-9364", customer: "Eva Garcia", merchant: "Merchant D", amount: "$78.25", status: "Completed" },
+  ];
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
         <p className="text-muted-foreground">
-          View detailed data and performance metrics for customers, riders, and merchants
+          View detailed data and performance metrics for customers, riders, merchants, and orders
         </p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-lg">
@@ -177,14 +206,35 @@ const Analytics = () => {
             </div>
           </CardContent>
         </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <FileText className="h-5 w-5 text-emerald-500" />
+              Orders
+            </CardTitle>
+            <CardDescription>Total orders processed</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-baseline justify-between">
+              <div className="text-3xl font-bold">775</div>
+              <div className="text-sm text-green-500 flex items-center">
+                <TrendingUp className="h-4 w-4 mr-1" />
+                15% 
+                <span className="text-muted-foreground ml-1">vs last month</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="grid grid-cols-4 md:w-[600px]">
+        <TabsList className="grid grid-cols-5 md:w-[700px]">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="customers">Customers</TabsTrigger>
           <TabsTrigger value="riders">Riders</TabsTrigger>
           <TabsTrigger value="merchants">Merchants</TabsTrigger>
+          <TabsTrigger value="orders">Orders</TabsTrigger>
         </TabsList>
         
         <TabsContent value="overview" className="space-y-4">
@@ -459,6 +509,140 @@ const Analytics = () => {
                     <Bar dataKey="revenue" fill="var(--color-revenue)" name="Revenue ($)" />
                   </BarChart>
                 </ChartContainer>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="orders" className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-muted-foreground" />
+                  Order Distribution
+                </CardTitle>
+                <CardDescription>
+                  Breakdown of order status
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={orderData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={true}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    >
+                      {orderData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-muted-foreground" />
+                  Orders by Category
+                </CardTitle>
+                <CardDescription>
+                  Distribution of orders by category
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="h-[300px]">
+                <ChartContainer
+                  config={{
+                    value: { color: "#10b981" }
+                  }}
+                >
+                  <BarChart 
+                    layout="vertical" 
+                    data={ordersByCategory}
+                    margin={{ top: 20, right: 30, left: 70, bottom: 20 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis type="number" />
+                    <YAxis dataKey="name" type="category" width={80} />
+                    <ChartTooltip />
+                    <Legend />
+                    <Bar dataKey="value" fill="var(--color-value)" name="Orders" />
+                  </BarChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-muted-foreground" />
+                  Order Volume Trend
+                </CardTitle>
+                <CardDescription>
+                  Monthly order volume
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="h-[300px]">
+                <ChartContainer
+                  config={{
+                    value: { color: "#0ea5e9" }
+                  }}
+                >
+                  <LineChart data={orderTrend} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <ChartTooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey="value" stroke="var(--color-value)" name="Orders" />
+                  </LineChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-muted-foreground" />
+                  Top Orders
+                </CardTitle>
+                <CardDescription>
+                  Recent high-value orders
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Order ID</TableHead>
+                      <TableHead>Customer</TableHead>
+                      <TableHead>Merchant</TableHead>
+                      <TableHead>Amount</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {topOrders.map((order) => (
+                      <TableRow key={order.id}>
+                        <TableCell className="font-medium">{order.orderId}</TableCell>
+                        <TableCell>{order.customer}</TableCell>
+                        <TableCell>{order.merchant}</TableCell>
+                        <TableCell>{order.amount}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </CardContent>
             </Card>
           </div>
