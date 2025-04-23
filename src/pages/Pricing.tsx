@@ -1,4 +1,3 @@
-
 import {
   Card,
   CardContent,
@@ -112,7 +111,7 @@ const Pricing = () => {
           Pricing &amp; Commission Management
         </h1>
         <p className="text-muted-foreground max-w-2xl mt-2">
-          Add or remove service Pricing &amp; Commission for every offering—centralized financial controls, dynamic rules, campaign management, and robust reporting to suit your platform's diverse needs.
+          Add or remove Pricing &amp; Commission for all services we offer: centralized financial controls, dynamic rules, campaign management, and robust reporting to suit your platform's diverse needs.
         </p>
       </div>
 
@@ -165,4 +164,3 @@ const Pricing = () => {
 };
 
 export default Pricing;
-

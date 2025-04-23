@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -8,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { HelpCircle, MessageSquare, Users, Activity, Database, Search, Edit, Trash2, Check, X } from "lucide-react";
 
-// Sample support ticket data
 const initCustomerTickets = [
   { id: 1, subject: "Payment not processed", customer: "Alice Wilson", status: "open", priority: "high", created: "2025-04-20", lastUpdate: "2025-04-21" },
   { id: 2, subject: "Order delivery delayed", customer: "Bob Martinez", status: "in-progress", priority: "medium", created: "2025-04-19", lastUpdate: "2025-04-21" },
@@ -37,7 +35,6 @@ const Support = () => {
   const [activeTab, setActiveTab] = useState("customers");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Individual states to allow UI updates on edit
   const [customerTickets, setCustomerTickets] = useState(initCustomerTickets);
   const [editingCustomer, setEditingCustomer] = useState<number | null>(null);
   const [editValueCustomer, setEditValueCustomer] = useState<string>("");
@@ -50,7 +47,6 @@ const Support = () => {
   const [editingMerchant, setEditingMerchant] = useState<number | null>(null);
   const [editValueMerchant, setEditValueMerchant] = useState<string>("");
 
-  // Status badge colors
   const getStatusBadge = (status) => {
     switch (status) {
       case "open":
@@ -64,7 +60,6 @@ const Support = () => {
     }
   };
 
-  // Priority badge colors
   const getPriorityBadge = (priority) => {
     switch (priority) {
       case "high":
@@ -78,7 +73,6 @@ const Support = () => {
     }
   };
 
-  // Handlers to edit, resolve or re-open tickets
   const handleEdit = (type, id, val) => {
     if (type === "customer") {
       setEditingCustomer(id);
@@ -91,11 +85,13 @@ const Support = () => {
       setEditValueMerchant(val);
     }
   };
+
   const handleEditChange = (type, val) => {
     if (type === "customer") setEditValueCustomer(val);
     if (type === "rider") setEditValueRider(val);
     if (type === "merchant") setEditValueMerchant(val);
   };
+
   const handleEditSave = (type, id) => {
     if (type === "customer") {
       setCustomerTickets(ts =>
@@ -114,6 +110,7 @@ const Support = () => {
       setEditingMerchant(null);
     }
   };
+
   const handleResolve = (type, id) => {
     if (type === "customer") {
       setCustomerTickets(ts =>
@@ -129,6 +126,7 @@ const Support = () => {
       );
     }
   };
+
   const handleReopen = (type, id) => {
     if (type === "customer") {
       setCustomerTickets(ts =>
@@ -144,6 +142,43 @@ const Support = () => {
       );
     }
   };
+
+  const handleToggleStatus = (type, id) => {
+    if (type === "customer") {
+      setCustomerTickets(ts =>
+        ts.map(t =>
+          t.id === id
+            ? { ...t, status: t.status === "resolved" ? "open" : "resolved", lastUpdate: (new Date()).toISOString().split("T")[0] }
+            : t
+        )
+      );
+    } else if (type === "rider") {
+      setRiderTickets(ts =>
+        ts.map(t =>
+          t.id === id
+            ? { ...t, status: t.status === "resolved" ? "open" : "resolved", lastUpdate: (new Date()).toISOString().split("T")[0] }
+            : t
+        )
+      );
+    } else if (type === "merchant") {
+      setMerchantTickets(ts =>
+        ts.map(t =>
+          t.id === id
+            ? { ...t, status: t.status === "resolved" ? "open" : "resolved", lastUpdate: (new Date()).toISOString().split("T")[0] }
+            : t
+        )
+      );
+    }
+  };
+
+  const getAllTickets = () => [
+    ...customerTickets,
+    ...riderTickets,
+    ...merchantTickets,
+  ];
+
+  const openTicketsCount = getAllTickets().filter(t => t.status !== "resolved").length;
+  const resolvedTodayCount = getAllTickets().filter(t => t.status === "resolved" && ["2025-04-18", "2025-04-20", "2025-04-21"].includes(t.lastUpdate)).length;
 
   return (
     <div className="space-y-6">
@@ -175,7 +210,7 @@ const Support = () => {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">
-              {customerTickets.concat(riderTickets, merchantTickets).filter(t => t.status !== "resolved").length}
+              {openTicketsCount}
             </div>
           </CardContent>
         </Card>
@@ -190,9 +225,7 @@ const Support = () => {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">
-              {
-                customerTickets.concat(riderTickets, merchantTickets).filter(t => t.status === "resolved" && t.lastUpdate === "2025-04-18" || t.lastUpdate === "2025-04-20" || t.lastUpdate === "2025-04-21").length
-              }
+              {resolvedTodayCount}
             </div>
           </CardContent>
         </Card>
@@ -308,20 +341,11 @@ const Support = () => {
                           <Button
                             variant="outline"
                             size="icon"
-                            className="text-green-600"
-                            onClick={() => handleResolve("customer", ticket.id)}
-                            disabled={ticket.status === "resolved"}
+                            onClick={() => handleToggleStatus("customer", ticket.id)}
+                            className={ticket.status === "resolved" ? "text-red-600" : "text-green-600"}
+                            title={ticket.status === "resolved" ? "Reopen" : "Resolve"}
                           >
-                            <Check className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="text-red-600"
-                            onClick={() => handleReopen("customer", ticket.id)}
-                            disabled={ticket.status !== "resolved"}
-                          >
-                            <X className="h-4 w-4" />
+                            {ticket.status === "resolved" ? <X className="h-4 w-4" /> : <Check className="h-4 w-4" />}
                           </Button>
                         </div>
                       </TableCell>
@@ -419,20 +443,11 @@ const Support = () => {
                           <Button
                             variant="outline"
                             size="icon"
-                            className="text-green-600"
-                            onClick={() => handleResolve("rider", ticket.id)}
-                            disabled={ticket.status === "resolved"}
+                            onClick={() => handleToggleStatus("rider", ticket.id)}
+                            className={ticket.status === "resolved" ? "text-red-600" : "text-green-600"}
+                            title={ticket.status === "resolved" ? "Reopen" : "Resolve"}
                           >
-                            <Check className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="text-red-600"
-                            onClick={() => handleReopen("rider", ticket.id)}
-                            disabled={ticket.status !== "resolved"}
-                          >
-                            <X className="h-4 w-4" />
+                            {ticket.status === "resolved" ? <X className="h-4 w-4" /> : <Check className="h-4 w-4" />}
                           </Button>
                         </div>
                       </TableCell>
@@ -530,20 +545,11 @@ const Support = () => {
                           <Button
                             variant="outline"
                             size="icon"
-                            className="text-green-600"
-                            onClick={() => handleResolve("merchant", ticket.id)}
-                            disabled={ticket.status === "resolved"}
+                            onClick={() => handleToggleStatus("merchant", ticket.id)}
+                            className={ticket.status === "resolved" ? "text-red-600" : "text-green-600"}
+                            title={ticket.status === "resolved" ? "Reopen" : "Resolve"}
                           >
-                            <Check className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="text-red-600"
-                            onClick={() => handleReopen("merchant", ticket.id)}
-                            disabled={ticket.status !== "resolved"}
-                          >
-                            <X className="h-4 w-4" />
+                            {ticket.status === "resolved" ? <X className="h-4 w-4" /> : <Check className="h-4 w-4" />}
                           </Button>
                         </div>
                       </TableCell>
@@ -565,4 +571,3 @@ const Support = () => {
 };
 
 export default Support;
-
