@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { HelpCircle, MessageSquare, Users, Activity, Database, Search, Edit, Trash2, Check, X } from "lucide-react";
+import SupportChatModal from "./support/SupportChatModal";
+import { Dialog } from "@/components/ui/dialog";
 
 const initCustomerTickets = [
   { id: 1, subject: "Payment not processed", customer: "Alice Wilson", status: "open", priority: "high", created: "2025-04-20", lastUpdate: "2025-04-21" },
@@ -46,6 +48,12 @@ const Support = () => {
   const [merchantTickets, setMerchantTickets] = useState(initMerchantTickets);
   const [editingMerchant, setEditingMerchant] = useState<number | null>(null);
   const [editValueMerchant, setEditValueMerchant] = useState<string>("");
+
+  const [customerTicketMessages, setCustomerTicketMessages] = useState<{ [id: number]: any[] }>({});
+  const [riderTicketMessages, setRiderTicketMessages] = useState<{ [id: number]: any[] }>({});
+  const [merchantTicketMessages, setMerchantTicketMessages] = useState<{ [id: number]: any[] }>({});
+
+  const [chatModal, setChatModal] = useState<null | { type: "customer" | "rider" | "merchant"; ticket: any }> (null);
 
   const getStatusBadge = (status) => {
     switch (status) {
@@ -168,6 +176,30 @@ const Support = () => {
             : t
         )
       );
+    }
+  };
+
+  const handleSendMessage = (type: "customer"|"rider"|"merchant", id: number, msg: string) => {
+    const newMsg = {
+      sender: "support",
+      content: msg,
+      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    };
+    if (type === "customer") {
+      setCustomerTicketMessages((m) => ({
+        ...m,
+        [id]: [...(m[id] || []), newMsg]
+      }));
+    } else if (type === "rider") {
+      setRiderTicketMessages((m) => ({
+        ...m,
+        [id]: [...(m[id] || []), newMsg]
+      }));
+    } else if (type === "merchant") {
+      setMerchantTicketMessages((m) => ({
+        ...m,
+        [id]: [...(m[id] || []), newMsg]
+      }));
     }
   };
 
@@ -347,6 +379,19 @@ const Support = () => {
                           >
                             {ticket.status === "resolved" ? <X className="h-4 w-4" /> : <Check className="h-4 w-4" />}
                           </Button>
+                          <Button
+                            size="icon"
+                            variant="default"
+                            onClick={() =>
+                              setChatModal({
+                                type: "customer",
+                                ticket: { id: ticket.id, subject: ticket.subject, party: "Customer", partyName: ticket.customer }
+                              })
+                            }
+                            title="Chat"
+                          >
+                            <MessageSquare className="h-4 w-4" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -448,6 +493,19 @@ const Support = () => {
                             title={ticket.status === "resolved" ? "Reopen" : "Resolve"}
                           >
                             {ticket.status === "resolved" ? <X className="h-4 w-4" /> : <Check className="h-4 w-4" />}
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="default"
+                            onClick={() =>
+                              setChatModal({
+                                type: "rider",
+                                ticket: { id: ticket.id, subject: ticket.subject, party: "Rider", partyName: ticket.rider }
+                              })
+                            }
+                            title="Chat"
+                          >
+                            <MessageSquare className="h-4 w-4" />
                           </Button>
                         </div>
                       </TableCell>
@@ -551,6 +609,19 @@ const Support = () => {
                           >
                             {ticket.status === "resolved" ? <X className="h-4 w-4" /> : <Check className="h-4 w-4" />}
                           </Button>
+                          <Button
+                            size="icon"
+                            variant="default"
+                            onClick={() =>
+                              setChatModal({
+                                type: "merchant",
+                                ticket: { id: ticket.id, subject: ticket.subject, party: "Merchant", partyName: ticket.merchant }
+                              })
+                            }
+                            title="Chat"
+                          >
+                            <MessageSquare className="h-4 w-4" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -566,6 +637,29 @@ const Support = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <SupportChatModal
+        open={!!chatModal}
+        onClose={() => setChatModal(null)}
+        ticket={
+          chatModal
+            ? chatModal.ticket
+            : { id: 0, subject: "", party: "", partyName: "" }
+        }
+        messages={
+          chatModal
+            ? chatModal.type === "customer"
+              ? customerTicketMessages[chatModal.ticket.id] || []
+              : chatModal.type === "rider"
+              ? riderTicketMessages[chatModal.ticket.id] || []
+              : merchantTicketMessages[chatModal.ticket.id] || []
+            : []
+        }
+        onSendMessage={msg =>
+          chatModal &&
+          handleSendMessage(chatModal.type, chatModal.ticket.id, msg)
+        }
+      />
     </div>
   );
 };
