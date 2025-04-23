@@ -20,36 +20,36 @@ import {
 const SECTIONS = [
   {
     icon: Calculator,
-    title: "Manage Pricing Models",
+    title: "Add or Remove Pricing Model",
     description:
-      "Define how prices are calculated for services or products. Factors include order cost and additional fees for time, distance, surge pricing, or delivery specifics.",
+      "Configure and manage pricing for every service offered. Add, remove, or modify pricing models and set dynamic rules.",
     highlights: [
-      "Base order cost setup",
-      "Additional fees (time/distance/surge/delivery)",
+      "Add/remove services to pricing",
+      "Flexible base cost and fee structures",
     ],
     color: "text-purple-500",
     bg: "bg-purple-50 dark:bg-purple-900/20",
   },
   {
     icon: Percent,
-    title: "Set Commission Rates",
+    title: "Set or Remove Commission Rates",
     description:
-      "Adjust the percentage the platform takes as commission from completed orders. Flexible commission by vendor, contract, or promotional period.",
+      "Add, edit, or remove commission rates for all offered services, vendors, and campaigns. Enable flexible commissions for each service.",
     highlights: [
-      "Vendor/partner tier rates",
-      "Campaign-based commissions",
+      "Add/remove commissions per vendor",
+      "Time-limited or contract-based setup",
     ],
     color: "text-blue-500",
     bg: "bg-blue-50 dark:bg-blue-900/20",
   },
   {
     icon: ChartPie,
-    title: "Dynamic Pricing Policies",
+    title: "Dynamic Pricing for All Services",
     description:
-      "Change pricing based on current market conditions, such as high demand or low driver availability.",
+      "Adjust prices automatically based on demand or operational rules for all your services.",
     highlights: [
-      "Automated price adjustments",
-      "Demand-driven surges",
+      "Enable/disable surcharges",
+      "Automated dynamic pricing",
     ],
     color: "text-rose-500",
     bg: "bg-rose-50 dark:bg-rose-900/20",
@@ -58,10 +58,10 @@ const SECTIONS = [
     icon: DollarSign,
     title: "Delivery Fees Management",
     description:
-      "Set fees based on delivery distance, time, or special circumstances. Ensure competitiveness and profitability.",
+      "Manage, add or remove delivery fee rules associated with your services.",
     highlights: [
-      "Distance & time-based fees",
-      "Custom delivery charges",
+      "Easy delivery fee setup for each service",
+      "Customizable tiered fee rules",
     ],
     color: "text-emerald-500",
     bg: "bg-emerald-50 dark:bg-emerald-900/20",
@@ -70,10 +70,10 @@ const SECTIONS = [
     icon: ReceiptText,
     title: "Offers & Discounts",
     description:
-      "Control platform offers or discounts for end users. Customize by geographic region, partner, or service type.",
+      "Add or remove discount rules for any service, region, or campaign.",
     highlights: [
-      "Location/service-type targeting",
-      "Campaign setup & tracking",
+      "Custom, location, or service-based offers",
+      "Simple campaign management",
     ],
     color: "text-orange-500",
     bg: "bg-orange-50 dark:bg-orange-900/20",
@@ -82,22 +82,22 @@ const SECTIONS = [
     icon: MapPin,
     title: "Regional & Partner Customization",
     description:
-      "Set pricing and commission models for specific regions or partners, like restaurant chains or driver groups.",
+      "Override or remove service pricing/commissions for regions, partner types, or special groups.",
     highlights: [
-      "Region or partner overrides",
-      "Fine-grained access",
+      "Region/partner rule management",
+      "Easy overrides/removal",
     ],
     color: "text-fuchsia-500",
     bg: "bg-fuchsia-50 dark:bg-fuchsia-900/20",
   },
   {
     icon: Receipt,
-    title: "Invoicing & Financial Reporting",
+    title: "Invoicing & Financial Reports",
     description:
-      "Track platform finances, generate invoices, and prepare periodic reports on sales and commissions by vendor or partner.",
+      "Track and report on sales, pricing, and commissions for all service types.",
     highlights: [
-      "Revenue/expense tracking",
-      "Auto-generated reports",
+      "Revenue/expense insights by service",
+      "Easy rule addition and removal",
     ],
     color: "text-gray-600",
     bg: "bg-gray-50 dark:bg-gray-900/20",
@@ -112,7 +112,7 @@ const Pricing = () => {
           Pricing &amp; Commission Management
         </h1>
         <p className="text-muted-foreground max-w-2xl mt-2">
-          Centralize all financial controls for your platform. Configure service pricing, manage commissions, create special offers, and leverage dynamic and customizable business rules across vendors and regions. Easily analyze sales and commission performance to inform your business decisions.
+          Add or remove service Pricing &amp; Commission for every offering—centralized financial controls, dynamic rules, campaign management, and robust reporting to suit your platform's diverse needs.
         </p>
       </div>
 
@@ -149,13 +149,13 @@ const Pricing = () => {
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              This page provides a unified interface for setting service prices, managing commissions and offers, and preparing reports, letting you adapt dynamically to market and regional trends.
+              This page lets you add or remove service pricing and commission models, giving you full flexibility to adapt platform revenue and management to changing needs.
             </p>
             <ul className="list-disc pl-6 mt-2 text-muted-foreground space-y-1 text-sm">
-              <li>Set base prices and add surcharges as needed.</li>
-              <li>Easily change commission and offer policies.</li>
-              <li>Customize based on region, vendor, or demand.</li>
-              <li>Quickly generate detailed sales and commission reports.</li>
+              <li>Add/remove base prices or surcharges for every service offered.</li>
+              <li>Quickly change or disable commission and offer policies as needed.</li>
+              <li>Customize at any detail: region, vendor, demand, or service type.</li>
+              <li>Generate and assess detailed financial performance on all rules.</li>
             </ul>
           </CardContent>
         </Card>
@@ -165,3 +165,4 @@ const Pricing = () => {
 };
 
 export default Pricing;
+

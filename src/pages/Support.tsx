@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { HelpCircle, MessageSquare, Users, Activity, Database, Search, Edit, Trash2, Check, X } from "lucide-react";
 
 // Sample support ticket data
-const customerTickets = [
+const initCustomerTickets = [
   { id: 1, subject: "Payment not processed", customer: "Alice Wilson", status: "open", priority: "high", created: "2025-04-20", lastUpdate: "2025-04-21" },
   { id: 2, subject: "Order delivery delayed", customer: "Bob Martinez", status: "in-progress", priority: "medium", created: "2025-04-19", lastUpdate: "2025-04-21" },
   { id: 3, subject: "App crashes during checkout", customer: "Carol Taylor", status: "open", priority: "high", created: "2025-04-18", lastUpdate: "2025-04-20" },
@@ -17,7 +17,7 @@ const customerTickets = [
   { id: 5, subject: "Refund request", customer: "Eva Garcia", status: "resolved", priority: "low", created: "2025-04-15", lastUpdate: "2025-04-18" },
 ];
 
-const riderTickets = [
+const initRiderTickets = [
   { id: 1, subject: "App navigation issues", rider: "John Doe", status: "open", priority: "high", created: "2025-04-20", lastUpdate: "2025-04-21" },
   { id: 2, subject: "Payment not received", rider: "Jane Smith", status: "in-progress", priority: "high", created: "2025-04-19", lastUpdate: "2025-04-21" },
   { id: 3, subject: "Vehicle breakdown assistance", rider: "Robert Johnson", status: "resolved", priority: "medium", created: "2025-04-18", lastUpdate: "2025-04-20" },
@@ -25,7 +25,7 @@ const riderTickets = [
   { id: 5, subject: "Account verification issue", rider: "Michael Brown", status: "open", priority: "low", created: "2025-04-15", lastUpdate: "2025-04-18" },
 ];
 
-const merchantTickets = [
+const initMerchantTickets = [
   { id: 1, subject: "Menu items not displaying", merchant: "Merchant A", status: "open", priority: "high", created: "2025-04-20", lastUpdate: "2025-04-21" },
   { id: 2, subject: "Payment reconciliation", merchant: "Merchant B", status: "in-progress", priority: "medium", created: "2025-04-19", lastUpdate: "2025-04-21" },
   { id: 3, subject: "Order management system error", merchant: "Merchant C", status: "open", priority: "high", created: "2025-04-18", lastUpdate: "2025-04-20" },
@@ -36,6 +36,19 @@ const merchantTickets = [
 const Support = () => {
   const [activeTab, setActiveTab] = useState("customers");
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Individual states to allow UI updates on edit
+  const [customerTickets, setCustomerTickets] = useState(initCustomerTickets);
+  const [editingCustomer, setEditingCustomer] = useState<number | null>(null);
+  const [editValueCustomer, setEditValueCustomer] = useState<string>("");
+
+  const [riderTickets, setRiderTickets] = useState(initRiderTickets);
+  const [editingRider, setEditingRider] = useState<number | null>(null);
+  const [editValueRider, setEditValueRider] = useState<string>("");
+
+  const [merchantTickets, setMerchantTickets] = useState(initMerchantTickets);
+  const [editingMerchant, setEditingMerchant] = useState<number | null>(null);
+  const [editValueMerchant, setEditValueMerchant] = useState<string>("");
 
   // Status badge colors
   const getStatusBadge = (status) => {
@@ -65,6 +78,73 @@ const Support = () => {
     }
   };
 
+  // Handlers to edit, resolve or re-open tickets
+  const handleEdit = (type, id, val) => {
+    if (type === "customer") {
+      setEditingCustomer(id);
+      setEditValueCustomer(val);
+    } else if (type === "rider") {
+      setEditingRider(id);
+      setEditValueRider(val);
+    } else if (type === "merchant") {
+      setEditingMerchant(id);
+      setEditValueMerchant(val);
+    }
+  };
+  const handleEditChange = (type, val) => {
+    if (type === "customer") setEditValueCustomer(val);
+    if (type === "rider") setEditValueRider(val);
+    if (type === "merchant") setEditValueMerchant(val);
+  };
+  const handleEditSave = (type, id) => {
+    if (type === "customer") {
+      setCustomerTickets(ts =>
+        ts.map(t => t.id === id ? { ...t, subject: editValueCustomer } : t)
+      );
+      setEditingCustomer(null);
+    } else if (type === "rider") {
+      setRiderTickets(ts =>
+        ts.map(t => t.id === id ? { ...t, subject: editValueRider } : t)
+      );
+      setEditingRider(null);
+    } else if (type === "merchant") {
+      setMerchantTickets(ts =>
+        ts.map(t => t.id === id ? { ...t, subject: editValueMerchant } : t)
+      );
+      setEditingMerchant(null);
+    }
+  };
+  const handleResolve = (type, id) => {
+    if (type === "customer") {
+      setCustomerTickets(ts =>
+        ts.map(t => t.id === id ? { ...t, status: "resolved" } : t)
+      );
+    } else if (type === "rider") {
+      setRiderTickets(ts =>
+        ts.map(t => t.id === id ? { ...t, status: "resolved" } : t)
+      );
+    } else if (type === "merchant") {
+      setMerchantTickets(ts =>
+        ts.map(t => t.id === id ? { ...t, status: "resolved" } : t)
+      );
+    }
+  };
+  const handleReopen = (type, id) => {
+    if (type === "customer") {
+      setCustomerTickets(ts =>
+        ts.map(t => t.id === id ? { ...t, status: "open" } : t)
+      );
+    } else if (type === "rider") {
+      setRiderTickets(ts =>
+        ts.map(t => t.id === id ? { ...t, status: "open" } : t)
+      );
+    } else if (type === "merchant") {
+      setMerchantTickets(ts =>
+        ts.map(t => t.id === id ? { ...t, status: "open" } : t)
+      );
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -73,7 +153,7 @@ const Support = () => {
           Manage customer inquiries and support tickets
         </p>
       </div>
-      
+
       <div className="flex items-center space-x-2">
         <Search className="h-5 w-5 text-muted-foreground" />
         <Input 
@@ -94,7 +174,9 @@ const Support = () => {
             <CardDescription>Total unresolved tickets</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">14</div>
+            <div className="text-3xl font-bold">
+              {customerTickets.concat(riderTickets, merchantTickets).filter(t => t.status !== "resolved").length}
+            </div>
           </CardContent>
         </Card>
         
@@ -107,7 +189,11 @@ const Support = () => {
             <CardDescription>Tickets closed today</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">7</div>
+            <div className="text-3xl font-bold">
+              {
+                customerTickets.concat(riderTickets, merchantTickets).filter(t => t.status === "resolved" && t.lastUpdate === "2025-04-18" || t.lastUpdate === "2025-04-20" || t.lastUpdate === "2025-04-21").length
+              }
+            </div>
           </CardContent>
         </Card>
         
@@ -172,20 +258,69 @@ const Support = () => {
                     )
                     .map((ticket) => (
                     <TableRow key={ticket.id}>
-                      <TableCell className="font-medium">{ticket.subject}</TableCell>
+                      <TableCell className="font-medium">
+                        {editingCustomer === ticket.id ? (
+                          <div className="flex items-center space-x-2">
+                            <Input
+                              value={editValueCustomer}
+                              onChange={e => handleEditChange("customer", e.target.value)}
+                              onKeyDown={e => {
+                                if (e.key === "Enter") handleEditSave("customer", ticket.id);
+                                if (e.key === "Escape") setEditingCustomer(null);
+                              }}
+                              className="max-w-xs"
+                              autoFocus
+                            />
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => handleEditSave("customer", ticket.id)}
+                              className="text-green-600"
+                            >
+                              <Check className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => setEditingCustomer(null)}
+                              className="text-red-600"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ) : (
+                          ticket.subject
+                        )}
+                      </TableCell>
                       <TableCell>{ticket.customer}</TableCell>
                       <TableCell>{getStatusBadge(ticket.status)}</TableCell>
                       <TableCell>{getPriorityBadge(ticket.priority)}</TableCell>
                       <TableCell>{ticket.lastUpdate}</TableCell>
                       <TableCell>
                         <div className="flex space-x-2">
-                          <Button variant="outline" size="icon">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => handleEdit("customer", ticket.id, ticket.subject)}
+                          >
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button variant="outline" size="icon" className="text-green-600">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="text-green-600"
+                            onClick={() => handleResolve("customer", ticket.id)}
+                            disabled={ticket.status === "resolved"}
+                          >
                             <Check className="h-4 w-4" />
                           </Button>
-                          <Button variant="outline" size="icon" className="text-red-600">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="text-red-600"
+                            onClick={() => handleReopen("customer", ticket.id)}
+                            disabled={ticket.status !== "resolved"}
+                          >
                             <X className="h-4 w-4" />
                           </Button>
                         </div>
@@ -234,20 +369,69 @@ const Support = () => {
                     )
                     .map((ticket) => (
                     <TableRow key={ticket.id}>
-                      <TableCell className="font-medium">{ticket.subject}</TableCell>
+                      <TableCell className="font-medium">
+                        {editingRider === ticket.id ? (
+                          <div className="flex items-center space-x-2">
+                            <Input
+                              value={editValueRider}
+                              onChange={e => handleEditChange("rider", e.target.value)}
+                              onKeyDown={e => {
+                                if (e.key === "Enter") handleEditSave("rider", ticket.id);
+                                if (e.key === "Escape") setEditingRider(null);
+                              }}
+                              className="max-w-xs"
+                              autoFocus
+                            />
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => handleEditSave("rider", ticket.id)}
+                              className="text-green-600"
+                            >
+                              <Check className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => setEditingRider(null)}
+                              className="text-red-600"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ) : (
+                          ticket.subject
+                        )}
+                      </TableCell>
                       <TableCell>{ticket.rider}</TableCell>
                       <TableCell>{getStatusBadge(ticket.status)}</TableCell>
                       <TableCell>{getPriorityBadge(ticket.priority)}</TableCell>
                       <TableCell>{ticket.lastUpdate}</TableCell>
                       <TableCell>
                         <div className="flex space-x-2">
-                          <Button variant="outline" size="icon">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => handleEdit("rider", ticket.id, ticket.subject)}
+                          >
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button variant="outline" size="icon" className="text-green-600">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="text-green-600"
+                            onClick={() => handleResolve("rider", ticket.id)}
+                            disabled={ticket.status === "resolved"}
+                          >
                             <Check className="h-4 w-4" />
                           </Button>
-                          <Button variant="outline" size="icon" className="text-red-600">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="text-red-600"
+                            onClick={() => handleReopen("rider", ticket.id)}
+                            disabled={ticket.status !== "resolved"}
+                          >
                             <X className="h-4 w-4" />
                           </Button>
                         </div>
@@ -296,20 +480,69 @@ const Support = () => {
                     )
                     .map((ticket) => (
                     <TableRow key={ticket.id}>
-                      <TableCell className="font-medium">{ticket.subject}</TableCell>
+                      <TableCell className="font-medium">
+                        {editingMerchant === ticket.id ? (
+                          <div className="flex items-center space-x-2">
+                            <Input
+                              value={editValueMerchant}
+                              onChange={e => handleEditChange("merchant", e.target.value)}
+                              onKeyDown={e => {
+                                if (e.key === "Enter") handleEditSave("merchant", ticket.id);
+                                if (e.key === "Escape") setEditingMerchant(null);
+                              }}
+                              className="max-w-xs"
+                              autoFocus
+                            />
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => handleEditSave("merchant", ticket.id)}
+                              className="text-green-600"
+                            >
+                              <Check className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => setEditingMerchant(null)}
+                              className="text-red-600"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ) : (
+                          ticket.subject
+                        )}
+                      </TableCell>
                       <TableCell>{ticket.merchant}</TableCell>
                       <TableCell>{getStatusBadge(ticket.status)}</TableCell>
                       <TableCell>{getPriorityBadge(ticket.priority)}</TableCell>
                       <TableCell>{ticket.lastUpdate}</TableCell>
                       <TableCell>
                         <div className="flex space-x-2">
-                          <Button variant="outline" size="icon">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => handleEdit("merchant", ticket.id, ticket.subject)}
+                          >
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button variant="outline" size="icon" className="text-green-600">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="text-green-600"
+                            onClick={() => handleResolve("merchant", ticket.id)}
+                            disabled={ticket.status === "resolved"}
+                          >
                             <Check className="h-4 w-4" />
                           </Button>
-                          <Button variant="outline" size="icon" className="text-red-600">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="text-red-600"
+                            onClick={() => handleReopen("merchant", ticket.id)}
+                            disabled={ticket.status !== "resolved"}
+                          >
                             <X className="h-4 w-4" />
                           </Button>
                         </div>
@@ -332,3 +565,4 @@ const Support = () => {
 };
 
 export default Support;
+
