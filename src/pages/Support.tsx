@@ -324,38 +324,7 @@ const Support = () => {
                     .map((ticket) => (
                     <TableRow key={ticket.id}>
                       <TableCell className="font-medium">
-                        {editingCustomer === ticket.id ? (
-                          <div className="flex items-center space-x-2">
-                            <Input
-                              value={editValueCustomer}
-                              onChange={e => handleEditChange("customer", e.target.value)}
-                              onKeyDown={e => {
-                                if (e.key === "Enter") handleEditSave("customer", ticket.id);
-                                if (e.key === "Escape") setEditingCustomer(null);
-                              }}
-                              className="max-w-xs"
-                              autoFocus
-                            />
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => handleEditSave("customer", ticket.id)}
-                              className="text-green-600"
-                            >
-                              <Check className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => setEditingCustomer(null)}
-                              className="text-red-600"
-                            >
-                              <X className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        ) : (
-                          ticket.subject
-                        )}
+                        {ticket.subject}
                       </TableCell>
                       <TableCell>{ticket.customer}</TableCell>
                       <TableCell>{getStatusBadge(ticket.status)}</TableCell>
@@ -363,13 +332,6 @@ const Support = () => {
                       <TableCell>{ticket.lastUpdate}</TableCell>
                       <TableCell>
                         <div className="flex space-x-2">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => handleEdit("customer", ticket.id, ticket.subject)}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
                           <Button
                             variant="outline"
                             size="icon"
@@ -438,53 +400,13 @@ const Support = () => {
                     )
                     .map((ticket) => (
                     <TableRow key={ticket.id}>
-                      <TableCell className="font-medium">
-                        {editingRider === ticket.id ? (
-                          <div className="flex items-center space-x-2">
-                            <Input
-                              value={editValueRider}
-                              onChange={e => handleEditChange("rider", e.target.value)}
-                              onKeyDown={e => {
-                                if (e.key === "Enter") handleEditSave("rider", ticket.id);
-                                if (e.key === "Escape") setEditingRider(null);
-                              }}
-                              className="max-w-xs"
-                              autoFocus
-                            />
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => handleEditSave("rider", ticket.id)}
-                              className="text-green-600"
-                            >
-                              <Check className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => setEditingRider(null)}
-                              className="text-red-600"
-                            >
-                              <X className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        ) : (
-                          ticket.subject
-                        )}
-                      </TableCell>
+                      <TableCell className="font-medium">{ticket.subject}</TableCell>
                       <TableCell>{ticket.rider}</TableCell>
                       <TableCell>{getStatusBadge(ticket.status)}</TableCell>
                       <TableCell>{getPriorityBadge(ticket.priority)}</TableCell>
                       <TableCell>{ticket.lastUpdate}</TableCell>
                       <TableCell>
                         <div className="flex space-x-2">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => handleEdit("rider", ticket.id, ticket.subject)}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
                           <Button
                             variant="outline"
                             size="icon"
@@ -553,53 +475,13 @@ const Support = () => {
                     )
                     .map((ticket) => (
                     <TableRow key={ticket.id}>
-                      <TableCell className="font-medium">
-                        {editingMerchant === ticket.id ? (
-                          <div className="flex items-center space-x-2">
-                            <Input
-                              value={editValueMerchant}
-                              onChange={e => handleEditChange("merchant", e.target.value)}
-                              onKeyDown={e => {
-                                if (e.key === "Enter") handleEditSave("merchant", ticket.id);
-                                if (e.key === "Escape") setEditingMerchant(null);
-                              }}
-                              className="max-w-xs"
-                              autoFocus
-                            />
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => handleEditSave("merchant", ticket.id)}
-                              className="text-green-600"
-                            >
-                              <Check className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => setEditingMerchant(null)}
-                              className="text-red-600"
-                            >
-                              <X className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        ) : (
-                          ticket.subject
-                        )}
-                      </TableCell>
+                      <TableCell className="font-medium">{ticket.subject}</TableCell>
                       <TableCell>{ticket.merchant}</TableCell>
                       <TableCell>{getStatusBadge(ticket.status)}</TableCell>
                       <TableCell>{getPriorityBadge(ticket.priority)}</TableCell>
                       <TableCell>{ticket.lastUpdate}</TableCell>
                       <TableCell>
                         <div className="flex space-x-2">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => handleEdit("merchant", ticket.id, ticket.subject)}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
                           <Button
                             variant="outline"
                             size="icon"

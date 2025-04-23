@@ -1,164 +1,114 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import {
-  Percent,
-  DollarSign,
-  ReceiptText,
-  Calculator,
-  ChartPie,
-  Receipt,
-  MapPin,
-  Calendar,
-} from "lucide-react";
 
-const SECTIONS = [
-  {
-    icon: Calculator,
-    title: "Add or Remove Pricing Model",
-    description:
-      "Configure and manage pricing for every service offered. Add, remove, or modify pricing models and set dynamic rules.",
-    highlights: [
-      "Add/remove services to pricing",
-      "Flexible base cost and fee structures",
-    ],
-    color: "text-purple-500",
-    bg: "bg-purple-50 dark:bg-purple-900/20",
-  },
-  {
-    icon: Percent,
-    title: "Set or Remove Commission Rates",
-    description:
-      "Add, edit, or remove commission rates for all offered services, vendors, and campaigns. Enable flexible commissions for each service.",
-    highlights: [
-      "Add/remove commissions per vendor",
-      "Time-limited or contract-based setup",
-    ],
-    color: "text-blue-500",
-    bg: "bg-blue-50 dark:bg-blue-900/20",
-  },
-  {
-    icon: ChartPie,
-    title: "Dynamic Pricing for All Services",
-    description:
-      "Adjust prices automatically based on demand or operational rules for all your services.",
-    highlights: [
-      "Enable/disable surcharges",
-      "Automated dynamic pricing",
-    ],
-    color: "text-rose-500",
-    bg: "bg-rose-50 dark:bg-rose-900/20",
-  },
-  {
-    icon: DollarSign,
-    title: "Delivery Fees Management",
-    description:
-      "Manage, add or remove delivery fee rules associated with your services.",
-    highlights: [
-      "Easy delivery fee setup for each service",
-      "Customizable tiered fee rules",
-    ],
-    color: "text-emerald-500",
-    bg: "bg-emerald-50 dark:bg-emerald-900/20",
-  },
-  {
-    icon: ReceiptText,
-    title: "Offers & Discounts",
-    description:
-      "Add or remove discount rules for any service, region, or campaign.",
-    highlights: [
-      "Custom, location, or service-based offers",
-      "Simple campaign management",
-    ],
-    color: "text-orange-500",
-    bg: "bg-orange-50 dark:bg-orange-900/20",
-  },
-  {
-    icon: MapPin,
-    title: "Regional & Partner Customization",
-    description:
-      "Override or remove service pricing/commissions for regions, partner types, or special groups.",
-    highlights: [
-      "Region/partner rule management",
-      "Easy overrides/removal",
-    ],
-    color: "text-fuchsia-500",
-    bg: "bg-fuchsia-50 dark:bg-fuchsia-900/20",
-  },
-  {
-    icon: Receipt,
-    title: "Invoicing & Financial Reports",
-    description:
-      "Track and report on sales, pricing, and commissions for all service types.",
-    highlights: [
-      "Revenue/expense insights by service",
-      "Easy rule addition and removal",
-    ],
-    color: "text-gray-600",
-    bg: "bg-gray-50 dark:bg-gray-900/20",
-  },
-];
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Plus, Trash2 } from "lucide-react";
+
+type Rule = {
+  id: number;
+  name: string;
+  type: "Pricing" | "Commission";
+  amount: number;
+  note?: string;
+};
 
 const Pricing = () => {
+  const [rules, setRules] = useState<Rule[]>([]);
+  const [name, setName] = useState("");
+  const [type, setType] = useState<"Pricing" | "Commission">("Pricing");
+  const [amount, setAmount] = useState("");
+  const [note, setNote] = useState("");
+
+  const handleAdd = () => {
+    if (!name.trim() || !amount || isNaN(Number(amount))) return;
+    setRules(prev => [
+      ...prev,
+      {
+        id: Date.now(),
+        name: name.trim(),
+        type,
+        amount: Number(amount),
+        note: note.trim() || undefined,
+      }
+    ]);
+    setName("");
+    setAmount("");
+    setNote("");
+    setType("Pricing");
+  };
+
+  const handleRemove = (id: number) => {
+    setRules(rs => rs.filter(r => r.id !== id));
+  };
+
   return (
-    <div className="space-y-8 max-w-5xl mx-auto py-6">
+    <div className="space-y-6 max-w-2xl mx-auto">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">
           Pricing &amp; Commission Management
         </h1>
-        <p className="text-muted-foreground max-w-2xl mt-2">
-          Add or remove Pricing &amp; Commission for all services we offer: centralized financial controls, dynamic rules, campaign management, and robust reporting to suit your platform's diverse needs.
+        <p className="text-muted-foreground">
+          Add or remove Pricing &amp; Commission for all services we offer. Create, remove, and control rules for flexible management.
         </p>
       </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        {SECTIONS.map((section, i) => (
-          <Card key={i}>
-            <CardHeader className="flex flex-row items-center gap-3">
-              <div className={`p-2 rounded-full ${section.bg}`}>
-                <section.icon className={`h-6 w-6 ${section.color}`} />
-              </div>
-              <div>
-                <CardTitle className="text-lg">{section.title}</CardTitle>
-                <CardDescription className="mt-1">{section.description}</CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <ul className="pl-3 list-disc text-muted-foreground space-y-1">
-                {section.highlights.map((hl, hidx) => (
-                  <li key={hidx}>{hl}</li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <div className="mt-8">
-        <Card>
-          <CardHeader className="flex flex-row items-center gap-2">
-            <ChartPie className="h-5 w-5 text-muted-foreground" />
-            <CardTitle className="text-lg">
-              Why This Page Matters
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground">
-              This page lets you add or remove service pricing and commission models, giving you full flexibility to adapt platform revenue and management to changing needs.
-            </p>
-            <ul className="list-disc pl-6 mt-2 text-muted-foreground space-y-1 text-sm">
-              <li>Add/remove base prices or surcharges for every service offered.</li>
-              <li>Quickly change or disable commission and offer policies as needed.</li>
-              <li>Customize at any detail: region, vendor, demand, or service type.</li>
-              <li>Generate and assess detailed financial performance on all rules.</li>
-            </ul>
-          </CardContent>
-        </Card>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Manage Pricing &amp; Commission</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="mb-4 flex flex-col gap-2 md:flex-row md:gap-4">
+            <Input
+              placeholder="Rule name"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              className="md:w-1/4"
+            />
+            <select value={type} onChange={e => setType(e.target.value as Rule["type"])} className="px-2 py-2 border rounded-md md:w-1/4">
+              <option value="Pricing">Pricing</option>
+              <option value="Commission">Commission</option>
+            </select>
+            <Input
+              placeholder="Amount"
+              type="number"
+              value={amount}
+              onChange={e => setAmount(e.target.value)}
+              className="md:w-1/4"
+            />
+            <Input
+              placeholder="Notes (optional)"
+              value={note}
+              onChange={e => setNote(e.target.value)}
+              className="md:w-1/4"
+            />
+            <Button onClick={handleAdd} disabled={!name.trim() || !amount}>
+              <Plus className="h-4 w-4 mr-1" /> Add
+            </Button>
+          </div>
+          <hr className="mb-3" />
+          <ul className="space-y-3">
+            {rules.length === 0 ? (
+              <li className="text-muted-foreground text-sm">No rules yet.</li>
+            ) : (
+              rules.map(rule => (
+                <li key={rule.id} className="flex items-center justify-between bg-accent/50 rounded px-4 py-2">
+                  <div>
+                    <span className="font-semibold">{rule.name}</span>{" "}
+                    <span className="px-2 py-1 rounded bg-blue-100 text-blue-700 text-xs ml-2">{rule.type}</span>
+                    <span className="ml-3 font-mono text-xs text-gray-700">{rule.amount}</span>
+                    {rule.note && (
+                      <span className="ml-4 text-muted-foreground text-xs">{rule.note}</span>
+                    )}
+                  </div>
+                  <Button size="icon" variant="destructive" onClick={() => handleRemove(rule.id)}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </li>
+              ))
+            )}
+          </ul>
+        </CardContent>
+      </Card>
     </div>
   );
 };
