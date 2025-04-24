@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { SidebarNav } from "./sidebar-nav";
@@ -9,6 +10,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
@@ -71,18 +74,74 @@ export function MainLayout() {
 }
 
 function NotificationsDropdown() {
+  const [notifications] = useState([
+    {
+      id: 1,
+      title: "New Order #1234",
+      description: "A new order has been placed",
+      time: "2 minutes ago",
+      read: false,
+    },
+    {
+      id: 2,
+      title: "Payment Received",
+      description: "Payment for Order #1233 has been received",
+      time: "1 hour ago",
+      read: false,
+    },
+    {
+      id: 3,
+      title: "Rider Update",
+      description: "Rider John has completed 10 deliveries",
+      time: "2 hours ago",
+      read: true,
+    },
+  ]);
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" className="rounded-full">
+        <Button variant="outline" size="icon" className="rounded-full relative">
           <Bell className="h-[1.2rem] w-[1.2rem]" />
-          <span className="sr-only">View Notifications</span>
+          {unreadCount > 0 && (
+            <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-delvero-500 text-[10px] font-medium text-white flex items-center justify-center">
+              {unreadCount}
+            </span>
+          )}
+          <span className="sr-only">View Notifications ({unreadCount} unread)</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem>No new notifications</DropdownMenuItem>
-        {/* You can expand this later with actual notification logic */}
+      <DropdownMenuContent align="end" className="w-80">
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm font-medium leading-none">Notifications</p>
+            <p className="text-xs text-muted-foreground">
+              You have {unreadCount} unread messages
+            </p>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {notifications.length === 0 ? (
+          <DropdownMenuItem>No notifications</DropdownMenuItem>
+        ) : (
+          notifications.map((notification) => (
+            <DropdownMenuItem key={notification.id} className="flex flex-col items-start gap-1 p-3">
+              <div className="flex w-full justify-between">
+                <span className="font-medium">{notification.title}</span>
+                <span className="text-xs text-muted-foreground">{notification.time}</span>
+              </div>
+              <span className="text-xs text-muted-foreground">{notification.description}</span>
+            </DropdownMenuItem>
+          ))
+        )}
+        <DropdownMenuSeparator />
+        <DropdownMenuItem className="w-full text-center justify-center font-medium">
+          View all notifications
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
+
