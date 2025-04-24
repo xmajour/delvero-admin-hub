@@ -1,10 +1,16 @@
-
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { SidebarNav } from "./sidebar-nav";
 import { ThemeToggle } from "../theme-toggle";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 export function MainLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -25,6 +31,7 @@ export function MainLayout() {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
         <header className="h-16 flex items-center px-6 border-b sticky top-0 z-30 bg-background">
+          {/* Mobile/desktop toggle button */}
           <button
             type="button"
             className="lg:hidden mr-4 text-muted-foreground hover:text-foreground"
@@ -41,6 +48,7 @@ export function MainLayout() {
           </button>
 
           <div className="ml-auto flex items-center space-x-4">
+            <NotificationsDropdown />
             <ThemeToggle />
           </div>
         </header>
@@ -59,5 +67,22 @@ export function MainLayout() {
         />
       )}
     </div>
+  );
+}
+
+function NotificationsDropdown() {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="icon" className="rounded-full">
+          <Bell className="h-[1.2rem] w-[1.2rem]" />
+          <span className="sr-only">View Notifications</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem>No new notifications</DropdownMenuItem>
+        {/* You can expand this later with actual notification logic */}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
